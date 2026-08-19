@@ -14,6 +14,8 @@ const requiredFragments = [
   "Über diese Anwendung",
   "About this app",
   "Unterstützung von Claude",
+  "Diese Anwendung „BITTE STIL Baukasten“ wurde 2026",
+  "Claude/Anthropic, Codex/OpenAI",
   "Vielfalt &amp; Stereotype",
   "Diversity &amp; stereotypes",
   "Alternativtext",

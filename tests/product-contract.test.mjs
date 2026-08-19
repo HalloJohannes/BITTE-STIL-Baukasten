@@ -26,6 +26,8 @@ test("Kernoptionen für verantwortungsvolle Gestaltung bleiben erhalten", async 
 
 test("Namens- und Lizenzlinks sind getrennt und sicher", async () => {
   const { source } = await readProject();
+  assert.match(source, /Diese Anwendung „BITTE STIL Baukasten“ wurde 2026/);
+  assert.match(source, /Claude\/Anthropic, Codex\/OpenAI/);
   assert.match(source, /linkedin\.com\/in\/johannes-koch-1964a3240/);
   assert.match(source, /opensource\.org\/license\/mit/);
   assert.match(source, /rel='license noopener'/);
