@@ -70,6 +70,10 @@ Das Plugin hilft direkt in Codex beim Formulieren und Überarbeiten von Bild-Pro
 
 Fehler, Verständnisprobleme und Ideen können über die GitHub-Issues gemeldet werden. Konkrete Änderungen können als Pull Request vorgeschlagen werden. Änderungen am ursprünglichen Repository werden erst übernommen, wenn Johannes Koch sie ausdrücklich freigibt.
 
+## Entstehung und Transparenz
+
+Der BITTE STIL Baukasten wurde im Vibe-Coding entwickelt: Die erste Fassung entstand mit Unterstützung von Claude. Anschließend wurde das Tool mit Codex weiterentwickelt, strukturiert, getestet und für die Veröffentlichung auf GitHub vorbereitet. Konzeption, Auswahl, Prüfung und Veröffentlichung verantwortet Johannes Koch.
+
 ## Lizenz
 
 MIT License. Copyright © 2026 Johannes Koch. Siehe `LICENSE`.
