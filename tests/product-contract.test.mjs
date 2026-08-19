@@ -26,7 +26,26 @@ test("Kernoptionen für verantwortungsvolle Gestaltung bleiben erhalten", async 
 
 test("Namens- und Lizenzlinks sind getrennt und sicher", async () => {
   const { source } = await readProject();
+  assert.match(source, /Diese Anwendung „BITTE STIL Baukasten“ wurde 2026/);
+  assert.match(source, /Claude\/Anthropic, Codex\/OpenAI/);
   assert.match(source, /linkedin\.com\/in\/johannes-koch-1964a3240/);
   assert.match(source, /opensource\.org\/license\/mit/);
   assert.match(source, /rel='license noopener'/);
+});
+
+test("Designsystem und Infodialog bleiben Teil des Produkts", async () => {
+  const { source } = await readProject();
+  for (const fragment of [
+    "--petrol:#123c4a",
+    "--teal:#1a9b93",
+    "--mint-deep:#badfd8",
+    'id="aboutOpen"',
+    'id="aboutDialog"',
+    "Über diese Anwendung",
+    "About this app",
+    "Unterstützung von Claude",
+    "with Codex"
+  ]) {
+    assert.ok(source.includes(fragment), `Fehlender Design- oder Infobaustein: ${fragment}`);
+  }
 });

@@ -1,5 +1,14 @@
 # BITTE STIL Baukasten – Änderungshistorie
 
+## Version 1.1.0 · 2026-08-19
+
+- Designsprache an SCHAU HIN Slides und den Lizenzfinder angeglichen: Petrol, Türkis, Mintflächen, kantige Karten, harte Schattenkante und pillenförmige Bedienelemente
+- Formular, Prompt-Ausgabe und Merkkästen responsiv und visuell klarer gegliedert
+- dezenten Button „Über diese Anwendung“ in der untersten Footer-Zeile ergänzt
+- zweisprachigen, tastaturbedienbaren Infodialog mit Zweck, Version, Datenschutz, Entstehung, Lizenz und Prüfhinweis ergänzt
+- Vibe-Coding-Entstehung transparent dokumentiert: erste Fassung mit Claude, anschließend mit Codex weiterentwickelt
+- Content-Security-Policy für die weiterhin vollständig eigenständige Offline-HTML ergänzt
+
 ## Version 1.0.0 · 2026-08-19
 
 - kontrollierte Repository-Struktur nach dem Muster von Escape Studio und SCHAU HIN Slides aufgebaut

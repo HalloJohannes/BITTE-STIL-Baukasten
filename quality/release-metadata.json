@@ -1,17 +1,17 @@
 {
   "product": "BITTE STIL Baukasten",
-  "version": "1.0.0",
-  "displayVersion": "V1.0.0",
-  "build": "1.0.0.20260819-codex",
+  "version": "1.1.0",
+  "displayVersion": "V1.1.0",
+  "build": "1.1.0.20260819-codex",
   "releaseDate": "2026-08-19",
   "sourceFile": "src/index.html",
-  "artifactFile": "BITTE-STIL-Baukasten-V1_0_0_20260819-codex.html",
+  "artifactFile": "BITTE-STIL-Baukasten-V1_1_0_20260819-codex.html",
   "aliasFile": "bitte-stil-baukasten.html",
   "license": "MIT",
   "technicalStatus": "ready",
   "manualVisualReview": {
     "status": "approved",
     "date": "2026-08-19",
-    "scope": "Desktop, Deutsch/Englisch, Profi-Bereich und Lizenzzeile"
+    "scope": "Einheitliche Designsprache, responsive Ansichten, Deutsch/Englisch, Profi-Bereich, Infodialog und Lizenzzeile"
   }
 }
