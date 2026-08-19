@@ -1,6 +1,6 @@
 {
   "name": "bitte-stil-baukasten",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "type": "module",
   "description": "Kontrollierte Quelle und Single-HTML-Auslieferung für den BITTE STIL Baukasten.",

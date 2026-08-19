@@ -41,11 +41,31 @@ test("Designsystem und Infodialog bleiben Teil des Produkts", async () => {
     "--mint-deep:#badfd8",
     'id="aboutOpen"',
     'id="aboutDialog"',
+    'id="licenseText"',
     "Über diese Anwendung",
     "About this app",
+    "Lizenztext anzeigen",
+    "Copyright (c) 2026 Johannes Koch",
     "Unterstützung von Claude",
     "with Codex"
   ]) {
     assert.ok(source.includes(fragment), `Fehlender Design- oder Infobaustein: ${fragment}`);
+  }
+});
+
+test("Header und Lesbarkeitshilfen bleiben zugänglich", async () => {
+  const { source } = await readProject();
+  for (const fragment of [
+    'data-readable="off"',
+    'id="readBtn"',
+    'id="fontDown"',
+    'id="fontUp"',
+    'aria-live="polite"',
+    "Bessere Lesbarkeit",
+    "Readable mode",
+    "Bild-Prompts präzise planen.",
+    "Plan image prompts precisely."
+  ]) {
+    assert.ok(source.includes(fragment), `Fehlender Header- oder Accessibility-Baustein: ${fragment}`);
   }
 });
