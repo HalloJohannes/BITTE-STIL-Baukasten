@@ -2,115 +2,187 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:; img-src 'self' data:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="application-name" content="BITTE STIL Baukasten">
-<meta name="application-version" content="1.0.0">
-<meta name="build" content="1.0.0.20260819-codex">
+<meta name="description" content="Ein zweisprachiger Baukasten für gestalterisch präzise Bild-Prompts in Lehre, Präsentationen und OER.">
+<meta name="author" content="Johannes Koch">
+<meta name="application-version" content="1.1.0">
+<meta name="build" content="1.1.0.20260819-codex">
 <title>BITTE STIL Baukasten</title>
 <style>
   :root{
-    --ink:#000;
-    --paper:#fff;
-    --line:#000;
-    --muted:#6b6b6b;
-    --field-h:44px;
+    --paper:#f7fcfb;
+    --surface:#fff;
+    --surface-soft:#edf7f5;
+    --mint:#dff4ef;
+    --mint-deep:#badfd8;
+    --teal:#1a9b93;
+    --teal-dark:#13756f;
+    --petrol:#123c4a;
+    --petrol-soft:#315b65;
+    --ink:#203036;
+    --muted:#60757c;
+    --line:#d8e8e4;
+    --lime:#dce84f;
+    --rose:#e85d68;
+    --shadow-hard:14px 14px 0 -5px var(--mint-deep);
+    --radius:2px;
+    --field-h:48px;
+    --font:"Outfit","Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
   }
-  *{box-sizing:border-box;margin:0;padding:0;border-radius:0 !important;}
-  html,body{background:var(--paper);color:var(--ink);
-    font-family:"Helvetica Neue",Helvetica,Arial,"Segoe UI",sans-serif;
-    font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;}
-  ::selection{background:#000;color:#fff;}
-  .wrap{width:min(96vw,1680px);margin:0 auto;padding:28px 0 40px;}
+  *{box-sizing:border-box;}
+  html{font-size:16px;scroll-behavior:smooth;}
+  body{margin:0;background:
+      linear-gradient(135deg,rgba(26,155,147,.09),transparent 34%),
+      radial-gradient(circle at 92% 12%,rgba(220,232,79,.2),transparent 24%),
+      var(--paper);
+    color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.58;
+    -webkit-font-smoothing:antialiased;}
+  button,input,select{font:inherit;}
+  button{cursor:pointer;}
+  a{color:var(--teal-dark);font-weight:700;}
+  ::selection{background:var(--petrol);color:var(--surface);}
+  :focus-visible{outline:3px solid var(--teal);outline-offset:3px;}
+  .wrap{width:min(calc(100% - 48px),1240px);margin:0 auto;padding:20px 0 42px;}
 
-  .top{display:flex;align-items:center;justify-content:space-between;gap:14px;
-    border-bottom:2px solid var(--line);padding-bottom:14px;margin-bottom:26px;}
-  h1{font-size:clamp(22px,2.6vw,34px);font-weight:700;letter-spacing:-0.02em;}
-  h1 .thin{font-weight:300;}
-  .lang{display:inline-flex;border:1px solid #000;}
-  .lang button{font:inherit;font-size:13px;font-weight:600;letter-spacing:.08em;background:#fff;color:#000;
-    border:0;padding:8px 18px;cursor:pointer;}
-  .lang button.on{background:#000;color:#fff;}
+  .top{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+    border-bottom:1px solid var(--line);padding:12px 0 24px;margin-bottom:34px;}
+  .brand-block{min-width:0;}
+  .kicker{display:inline-flex;align-items:center;gap:10px;margin:0 0 9px;color:var(--teal-dark);
+    font-size:.74rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;}
+  .kicker::before{content:"";width:34px;height:2px;background:var(--teal);}
+  h1{margin:0;color:var(--petrol);font-size:clamp(2.15rem,5vw,4.35rem);font-weight:900;
+    line-height:.98;letter-spacing:-.035em;}
+  h1 .thin{color:var(--teal);font-weight:900;}
+  .intro-copy{max-width:720px;margin:13px 0 0;color:var(--petrol-soft);font-size:1.02rem;}
+  .lang{display:inline-flex;flex:none;border:1.5px solid var(--mint-deep);border-radius:999px;
+    background:rgba(255,255,255,.65);overflow:hidden;box-shadow:0 8px 22px -20px rgba(18,60,74,.45);}
+  .lang button{min-height:38px;border:0;background:transparent;color:var(--petrol);padding:8px 15px;
+    font-size:.84rem;font-weight:800;}
+  .lang button.on{background:var(--petrol);color:var(--surface);}
 
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 26px;}
-  @media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:640px){.grid{grid-template-columns:1fr;}}
-  .field label{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;
-    text-transform:uppercase;margin-bottom:6px;}
-  .field label .soft{font-weight:400;text-transform:none;letter-spacing:0;}
-  .field .hint{font-size:11px;color:var(--muted);margin-top:5px;}
-  select,input[type=text]{
-    width:100%;height:var(--field-h);border:1px solid var(--line);background:#fff;color:#000;
-    font:inherit;font-size:15px;padding:0 12px;appearance:none;-webkit-appearance:none;outline:none;}
-  select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' stroke='black' stroke-width='1.6' fill='none'/></svg>");
-    background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;cursor:pointer;}
-  select:focus,input:focus{outline:2px solid #000;outline-offset:-1px;}
-  input.custom{margin-top:8px;display:none;}
+  .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 22px;}
+  .field label{display:block;margin-bottom:7px;color:var(--petrol);font-size:.7rem;font-weight:850;
+    letter-spacing:.13em;text-transform:uppercase;}
+  .field label .soft{color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0;}
+  .field .hint{margin:6px 0 0;color:var(--muted);font-size:.72rem;line-height:1.42;}
+  select,input[type=text]{width:100%;height:var(--field-h);border:1.5px solid var(--mint-deep);
+    border-radius:var(--radius);background:rgba(255,255,255,.9);color:var(--ink);font-size:.94rem;
+    padding:0 13px;appearance:none;-webkit-appearance:none;outline:none;}
+  select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' stroke='%23123c4a' stroke-width='1.6' fill='none'/></svg>");
+    background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;cursor:pointer;}
+  select:hover,input[type=text]:hover{border-color:var(--teal);}
+  select:focus,input[type=text]:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(26,155,147,.15);}
+  input.custom{display:none;margin-top:8px;}
   input.custom.show{display:block;}
-  .check{display:flex;align-items:flex-start;gap:10px;margin-top:10px;cursor:pointer;font-size:14px;}
-  .check input{width:18px;height:18px;accent-color:#000;flex:none;margin-top:2px;cursor:pointer;}
-  .checklist{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px;border:1px solid #000;padding:12px 14px;}
-  @media(max-width:900px){.checklist{grid-template-columns:1fr;}}
-  .checklist label{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;font-weight:400;
-    text-transform:none;letter-spacing:0;margin:0;cursor:pointer;line-height:1.35;}
-  .checklist input{width:16px;height:16px;accent-color:#000;flex:none;margin-top:2px;cursor:pointer;}
+  .check{display:flex;align-items:flex-start;gap:10px;margin-top:10px;cursor:pointer;font-size:.9rem;}
+  .field label.check{display:flex;margin:10px 0 0;color:var(--ink);font-size:.9rem;font-weight:500;
+    letter-spacing:0;text-transform:none;line-height:1.45;}
+  .check input{width:18px;height:18px;accent-color:var(--teal-dark);flex:none;margin-top:3px;cursor:pointer;}
+  .checklist{display:grid;grid-template-columns:1fr 1fr;gap:9px 22px;border:1.5px solid var(--petrol);
+    border-radius:var(--radius);background:rgba(255,255,255,.84);box-shadow:var(--shadow-hard);padding:16px 17px;}
+  .checklist label{display:flex;align-items:flex-start;gap:9px;margin:0;color:var(--ink);font-size:.84rem;
+    font-weight:500;text-transform:none;letter-spacing:0;cursor:pointer;line-height:1.38;}
+  .checklist input{width:17px;height:17px;accent-color:var(--teal-dark);flex:none;margin-top:2px;cursor:pointer;}
 
-  #palette{display:none;grid-column:1/-1;border:1px solid #000;padding:16px 18px 18px;margin-top:-6px;}
+  #palette{display:none;grid-column:1/-1;border:1.5px solid var(--petrol);border-radius:var(--radius);
+    background:rgba(255,255,255,.84);box-shadow:var(--shadow-hard);padding:20px 22px 21px;margin-top:-5px;}
   #palette.show{display:block;}
-  #palette .pt{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;}
-  #palette .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 18px;}
-  @media(max-width:1100px){#palette .pgrid{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:640px){#palette .pgrid{grid-template-columns:1fr;}}
-  #palette .pgrid label{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:5px;}
-  #palette .phint{font-size:11px;color:var(--muted);margin-top:10px;}
+  #palette .pt{margin:0 0 13px;color:var(--petrol);font-size:.7rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase;}
+  #palette .pgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px 18px;}
+  #palette .pgrid label{display:block;margin-bottom:6px;color:var(--petrol);font-size:.68rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;}
+  #palette .phint{margin:10px 0 0;color:var(--muted);font-size:.72rem;}
 
-  #exphead{margin-top:26px;border:1px solid #000;background:#fff;width:100%;
-    display:flex;align-items:center;justify-content:space-between;
-    font:inherit;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-    padding:12px 16px;cursor:pointer;}
-  #exphead .chev{transition:transform .2s;font-size:13px;}
+  #exphead{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:34px;
+    border:1.5px solid var(--mint-deep);border-radius:999px;background:rgba(255,255,255,.72);color:var(--petrol);
+    padding:11px 17px;font-size:.72rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase;}
+  #exphead:hover{border-color:var(--teal);background:var(--surface);}
+  #exphead .chev{color:var(--teal-dark);font-size:.85rem;transition:transform .2s;}
   #exphead.open .chev{transform:rotate(180deg);}
-  #exphead .ctx{font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:12.5px;}
-  #expbody{display:none;border:1px solid #000;border-top:0;padding:18px;}
+  #exphead .ctx{color:var(--muted);font-size:.76rem;font-weight:500;text-transform:none;letter-spacing:0;}
+  #expbody{display:none;margin-top:12px;border:1.5px solid var(--petrol);border-radius:var(--radius);
+    background:rgba(255,255,255,.84);box-shadow:var(--shadow-hard);padding:21px 22px;}
   #expbody.show{display:block;}
-  #expbody .egrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 22px;}
-  @media(max-width:1100px){#expbody .egrid{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:640px){#expbody .egrid{grid-template-columns:1fr;}}
-  #expbody .free{margin-top:16px;}
-  #expbody .free label{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;}
+  #expbody .egrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px 22px;}
+  #expbody .free{margin-top:17px;}
+  #expbody .free label{display:block;margin-bottom:7px;color:var(--petrol);font-size:.7rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase;}
 
-  .out-head{display:flex;align-items:center;justify-content:space-between;gap:14px;
-    margin:34px 0 0;border-top:2px solid var(--line);padding-top:22px;flex-wrap:wrap;}
-  .out-head .t{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;}
-  .output{border:1px solid var(--line);background:#fff;margin-top:14px;}
-  #prompt{padding:22px 24px;font-size:16.5px;line-height:1.6;min-height:120px;white-space:pre-wrap;}
-  #prompt .ph{background:#f2f2f2;box-shadow:inset 0 0 0 1px #d9d9d9;padding:1px 4px;}
-  #prompt .fix{text-decoration:underline;text-underline-offset:3px;}
-  .actions{display:flex;border-top:1px solid var(--line);}
-  .actions button{font:inherit;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-    background:#000;color:#fff;border:0;padding:13px 26px;cursor:pointer;}
-  .actions button:hover{background:#2a2a2a;}
-  .actions .ok{align-self:center;margin-left:14px;font-size:13px;color:var(--muted);opacity:0;transition:opacity .3s;}
+  .out-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:42px 0 0;
+    border-top:1px solid var(--line);padding-top:26px;flex-wrap:wrap;}
+  .out-head .t{display:inline-flex;align-items:center;gap:10px;color:var(--teal-dark);font-size:.74rem;
+    font-weight:850;letter-spacing:.15em;text-transform:uppercase;}
+  .out-head .t::before{content:"";width:34px;height:2px;background:var(--teal);}
+  .output{margin-top:15px;border:1.5px solid var(--petrol);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-hard);}
+  #prompt{min-height:132px;padding:24px 25px;color:var(--ink);font-size:1rem;line-height:1.66;white-space:pre-wrap;}
+  #prompt .ph{background:var(--mint);box-shadow:inset 0 0 0 1px var(--mint-deep);padding:2px 5px;}
+  #prompt .fix{text-decoration-color:var(--teal);text-decoration-thickness:2px;text-underline-offset:4px;}
+  .actions{display:flex;align-items:center;min-height:60px;border-top:1px solid var(--line);padding:8px 10px;}
+  .actions button{border:0;border-radius:999px;background:var(--petrol);color:var(--surface);padding:10px 19px;
+    font-size:.76rem;font-weight:850;letter-spacing:.09em;text-transform:uppercase;}
+  .actions button:hover{background:var(--teal-dark);transform:translateY(-1px);}
+  .actions .ok{align-self:center;margin-left:14px;color:var(--muted);font-size:.8rem;opacity:0;transition:opacity .3s;}
   .actions .ok.show{opacity:1;}
-  .why{font-size:12.5px;color:var(--muted);margin-top:10px;max-width:115ch;}
-  .why b{color:#000;}
-  .why a{color:#000;}
+  .why{max-width:115ch;margin:13px 0 0;color:var(--muted);font-size:.78rem;}
+  .why b{color:var(--petrol);}
 
-  .rules{margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #000;}
-  @media(max-width:900px){.rules{grid-template-columns:1fr;}}
-  .rules div{padding:14px 18px;font-size:13.5px;border-right:1px solid #000;}
-  .rules div:last-child{border-right:0;}
-  @media(max-width:900px){.rules div{border-right:0;border-bottom:1px solid #000;}.rules div:last-child{border-bottom:0;}}
-  .rules b{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px;}
+  .rules{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:34px;}
+  .rules div{border:1.5px solid var(--petrol);border-radius:var(--radius);background:rgba(255,255,255,.84);
+    box-shadow:var(--shadow-hard);padding:17px 19px;font-size:.84rem;}
+  .rules b{display:block;margin-bottom:5px;color:var(--petrol);font-size:.69rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase;}
 
-  .colo{margin-top:34px;font-size:12px;color:var(--muted);}
-  .colo a{color:#000;}
+  .footer-line{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-top:48px;
+    border-top:1px solid var(--line);padding-top:19px;color:var(--muted);}
+  .colo{margin:0;font-size:.76rem;}
+  .about-trigger{flex:none;border:0;background:transparent;color:var(--teal-dark);padding:3px 0;font-size:.74rem;
+    font-weight:750;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;}
+  .about-trigger:hover{color:var(--petrol);}
+  .about-dialog{width:min(620px,calc(100vw - 34px));max-height:min(82vh,760px);margin:auto;border:1.5px solid var(--petrol);
+    border-radius:var(--radius);background:var(--surface);color:var(--ink);box-shadow:var(--shadow-hard);padding:0;}
+  .about-dialog::backdrop{background:rgba(18,60,74,.3);backdrop-filter:blur(3px);}
+  .about-dialog[open]{display:block;}
+  .about-inner{padding:23px;}
+  .about-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:10px;}
+  .about-head h2{margin:0;color:var(--petrol);font-size:1.45rem;line-height:1.1;}
+  .about-close{display:grid;place-items:center;width:34px;height:34px;flex:none;border:1.5px solid var(--mint-deep);
+    border-radius:999px;background:transparent;color:var(--petrol);font-size:1.25rem;line-height:1;}
+  .about-close:hover{border-color:var(--teal);background:var(--surface-soft);}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  .about-intro{margin:0 0 13px;color:var(--muted);font-size:.91rem;}
+  .about-meta{display:grid;gap:0;margin:0;}
+  .about-meta div{border-top:1px solid var(--line);padding:10px 0;}
+  .about-meta dt{color:var(--petrol);font-size:.78rem;font-weight:850;}
+  .about-meta dd{margin:3px 0 0;color:var(--muted);font-size:.85rem;line-height:1.5;}
+  .about-meta a{font-weight:750;}
+
+  @media(max-width:1100px){
+    .grid,#expbody .egrid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    #palette .pgrid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  }
+  @media(max-width:900px){
+    .checklist,.rules{grid-template-columns:1fr;}
+  }
+  @media(max-width:680px){
+    .wrap{width:min(calc(100% - 30px),1240px);padding-top:10px;}
+    .top{align-items:flex-start;flex-direction:column;padding-bottom:20px;margin-bottom:28px;}
+    h1{font-size:clamp(2.3rem,13vw,3.45rem);}
+    .grid,#expbody .egrid,#palette .pgrid{grid-template-columns:1fr;}
+    .field[style]{grid-column:span 1 !important;}
+    .footer-line{align-items:flex-start;flex-direction:column;}
+    .about-inner{padding:19px;}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*{transition:none !important;}}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="top">
-    <h1>BITTE STIL <span class="thin">Baukasten</span></h1>
+    <div class="brand-block">
+      <p class="kicker" data-s="intro_kicker"></p>
+      <h1>BITTE STIL <span class="thin">Baukasten</span></h1>
+      <p class="intro-copy" data-s="intro_copy"></p>
+    </div>
     <div class="lang">
       <button id="de" class="on" type="button">Deutsch</button>
       <button id="en" type="button">English</button>
@@ -229,8 +301,34 @@
 
   <div class="rules" id="rules"></div>
 
-  <p class="colo" id="colo"></p>
+  <footer class="footer-line">
+    <p class="colo" id="colo"></p>
+    <button class="about-trigger" id="aboutOpen" type="button" data-s="about_button"></button>
+  </footer>
 </div>
+
+<dialog class="about-dialog" id="aboutDialog" aria-labelledby="aboutTitle">
+  <div class="about-inner">
+    <div class="about-head">
+      <h2 id="aboutTitle" data-s="about_title"></h2>
+      <button class="about-close" id="aboutClose" type="button">
+        <span aria-hidden="true">×</span><span class="sr-only" data-s="about_close"></span>
+      </button>
+    </div>
+    <p class="about-intro">
+      <span data-s="about_credit_a"></span>
+      <a href="https://www.linkedin.com/in/johannes-koch-1964a3240" target="_blank" rel="noopener">Johannes Koch</a><span data-s="about_credit_b"></span>
+    </p>
+    <dl class="about-meta">
+      <div><dt data-s="about_version"></dt><dd>1.1.0 · 1.1.0.20260819-codex</dd></div>
+      <div><dt data-s="about_purpose"></dt><dd data-s="about_purpose_p"></dd></div>
+      <div><dt data-s="about_privacy"></dt><dd data-s="about_privacy_p"></dd></div>
+      <div><dt data-s="about_origin"></dt><dd data-s="about_origin_p"></dd></div>
+      <div><dt data-s="about_license"></dt><dd data-s="about_license_p"></dd></div>
+      <div><dt data-s="about_note"></dt><dd data-s="about_note_p"></dd></div>
+    </dl>
+  </div>
+</dialog>
 
 <script>
 (function(){
@@ -238,6 +336,8 @@
 
 /* ---------- UI-Texte ---------- */
 var STR = {
+  intro_kicker:{de:"Bild-Prompts klar gestalten",en:"Shape image prompts with clarity"},
+  intro_copy:{de:"Stil, Farbwelt und Bildsprache bewusst festlegen – für Lehre, Präsentationen und offene Bildungsmaterialien.",en:"Define style, colour palette and visual language deliberately – for teaching, presentations and open educational resources."},
   l_zweck:{de:"Wofür?",en:"What for?"},
   l_typ:{de:"Bildtyp",en:"Image type"},
   l_stil:{de:"Stil",en:"Style"},
@@ -296,8 +396,24 @@ var STR = {
       ["Don't take the first draft","The first suggestion is the average of everything – that's why so many AI images look alike. Vary, re-roll, refine."],
       ["Iterate, don't accept","Decide style, colours and composition yourself and keep sharpening – AI delivers raw material, not a final product."],
       ["Disclose","Make the AI share visible: in the image, in the caption and in the material notes. Never remove tool watermarks."]]},
-  colo:{de:"Diese Anwendung wurde von <a href='https://www.linkedin.com/in/johannes-koch-1964a3240' target='_blank' rel='noopener'>Johannes Koch</a> mithilfe von KI erstellt und darf gern geteilt und weitergegeben werden. Lizenz: <a href='https://opensource.org/license/mit' target='_blank' rel='license noopener'>MIT</a>.",
-        en:"This application was created by <a href='https://www.linkedin.com/in/johannes-koch-1964a3240' target='_blank' rel='noopener'>Johannes Koch</a> with the help of AI and may be shared and passed on freely. License: <a href='https://opensource.org/license/mit' target='_blank' rel='license noopener'>MIT</a>."}
+  about_button:{de:"Über diese Anwendung",en:"About this app"},
+  about_title:{de:"Über diese Anwendung",en:"About this app"},
+  about_close:{de:"Dialog schließen",en:"Close dialog"},
+  about_credit_a:{de:"Der BITTE STIL Baukasten wurde entwickelt von ",en:"The BITTE STIL toolkit was developed by "},
+  about_credit_b:{de:", 2026.",en:", 2026."},
+  about_version:{de:"Produktversion",en:"Product version"},
+  about_purpose:{de:"Wofür ist der Baukasten da?",en:"What is the toolkit for?"},
+  about_purpose_p:{de:"Der Baukasten hilft dabei, Bild-Prompts gestalterisch präzise zu planen. Er strukturiert Stil, Farbwelt, Komposition, Diversität und Barrierefreiheit; Bilder erzeugt er nicht selbst.",en:"The toolkit helps plan image prompts with visual precision. It structures style, colour palette, composition, diversity and accessibility; it does not generate images itself."},
+  about_privacy:{de:"Netzwerk und Speicherung",en:"Network and storage"},
+  about_privacy_p:{de:"Die Anwendung läuft als einzelne HTML-Datei ohne externe Laufzeitressourcen. Eingaben bleiben nur im geöffneten Browserfenster; es werden keine Cookies gesetzt und keine Analyse- oder Tracking-Dienste eingebunden. Externe Links öffnen sich nur nach einem bewussten Klick.",en:"The app runs as a single HTML file without external runtime resources. Entries remain only in the open browser window; no cookies, analytics or tracking services are used. External links open only after a deliberate click."},
+  about_origin:{de:"Entstehung",en:"Development"},
+  about_origin_p:{de:"Entstanden im Vibe-Coding: Die erste Fassung wurde mit Unterstützung von Claude geschrieben und anschließend mit Codex weiterentwickelt, strukturiert und getestet. Konzeption, Auswahl, Prüfung und Veröffentlichung verantwortet Johannes Koch.",en:"Created through vibe coding: the first version was written with support from Claude, then further developed, structured and tested with Codex. Johannes Koch is responsible for the concept, selection, review and publication."},
+  about_license:{de:"Lizenz",en:"License"},
+  about_license_p:{de:"Der Quellcode steht unter der <a href='https://opensource.org/license/mit' target='_blank' rel='license noopener'>MIT-Lizenz</a>. Nutzung, Bearbeitung und Weitergabe sind erlaubt, solange Lizenzhinweis und Urheberangabe erhalten bleiben.",en:"The source code is provided under the <a href='https://opensource.org/license/mit' target='_blank' rel='license noopener'>MIT License</a>. Use, modification and redistribution are permitted as long as the license notice and attribution are retained."},
+  about_note:{de:"Hinweis",en:"Note"},
+  about_note_p:{de:"KI-generierte Bilder und Texte können Fehler, Verzerrungen und Stereotype enthalten. Ergebnisse sollten vor der Veröffentlichung fachlich, gestalterisch und rechtlich geprüft werden.",en:"AI-generated images and text may contain errors, bias and stereotypes. Review results for factual, visual and legal issues before publishing."},
+  colo:{de:"Diese Anwendung wurde 2026 von <a href='https://www.linkedin.com/in/johannes-koch-1964a3240' target='_blank' rel='noopener'>Johannes Koch</a> im Vibe-Coding mit Claude und Codex entwickelt. Lizenz: <a href='https://opensource.org/license/mit' target='_blank' rel='license noopener'>MIT</a>.",
+        en:"This application was developed in 2026 by <a href='https://www.linkedin.com/in/johannes-koch-1964a3240' target='_blank' rel='noopener'>Johannes Koch</a> through vibe coding with Claude and Codex. License: <a href='https://opensource.org/license/mit' target='_blank' rel='license noopener'>MIT</a>."}
 };
 
 /* ---------- Optionen (l = deutsches Label, le = englisches Label) ---------- */
@@ -757,6 +873,20 @@ function setLang(l){
 $("de").addEventListener("click",function(){setLang("de");});
 $("en").addEventListener("click",function(){setLang("en");});
 $("copy").addEventListener("click",copyPrompt);
+function closeAbout(){
+  var dialog=$("aboutDialog");
+  if(typeof dialog.close==="function")dialog.close();
+  else dialog.removeAttribute("open");
+}
+$("aboutOpen").addEventListener("click",function(){
+  var dialog=$("aboutDialog");
+  if(typeof dialog.showModal==="function")dialog.showModal();
+  else dialog.setAttribute("open","");
+});
+$("aboutClose").addEventListener("click",closeAbout);
+$("aboutDialog").addEventListener("click",function(event){
+  if(event.target===$("aboutDialog"))closeAbout();
+});
 
 /* ---------- Start ---------- */
 fillAll();
