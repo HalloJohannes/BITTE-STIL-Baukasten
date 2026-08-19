@@ -20,7 +20,8 @@ const required = [
   "quality/release-metadata.json",
   "src/index.html",
   "versions/aktuell",
-  "versions/archiv"
+  "versions/archiv/README.md",
+  "versions/aenderungshistorie/README.md"
 ];
 
 for (const path of required) {
