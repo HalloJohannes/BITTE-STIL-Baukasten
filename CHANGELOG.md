@@ -1,5 +1,13 @@
 # BITTE STIL Baukasten – Änderungshistorie
 
+## Version 1.1.1 · 2026-08-19
+
+- vollständigen MIT-Lizenztext im Bereich „Über diese Anwendung“ ausklappbar ergänzt
+- Header nach dem Muster des Lizenzfinders mit kompakter Produktmarke und großer zweizeiliger Einführung aufgebaut
+- Sprachumschaltung als DE/EN-Segment in die Kopfleiste überführt
+- Lesbarkeitsmodus mit alternativer Systemschrift und größerem Zeilenabstand ergänzt
+- zugängliche Schriftgrößensteuerung A−/A+ mit begrenzten Stufen und Statusausgabe ergänzt
+
 ## Version 1.1.0 · 2026-08-19
 
 - Designsprache an SCHAU HIN Slides und den Lizenzfinder angeglichen: Petrol, Türkis, Mintflächen, kantige Karten, harte Schattenkante und pillenförmige Bedienelemente
