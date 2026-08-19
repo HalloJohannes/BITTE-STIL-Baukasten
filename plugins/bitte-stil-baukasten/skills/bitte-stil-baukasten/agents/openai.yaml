@@ -1,0 +1,4 @@
+interface:
+  display_name: "BITTE STIL Baukasten"
+  short_description: "Bild-Prompts stilistisch präzise planen"
+  default_prompt: "Hilf mir, einen Bild-Prompt mit dem BITTE STIL Baukasten zu formulieren."

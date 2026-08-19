@@ -1,0 +1,25 @@
+{
+  "name": "bitte-stil-baukasten",
+  "version": "0.1.0",
+  "description": "Strukturiert Bild-Prompts nach dem BITTE-STIL-Prinzip und trennt Inhalt von gestalterischen Vorgaben.",
+  "author": {
+    "name": "Johannes Koch",
+    "url": "https://www.linkedin.com/in/johannes-koch-1964a3240"
+  },
+  "homepage": "https://hallojohannes.github.io/BITTE-STIL-Baukasten/",
+  "repository": "https://github.com/HalloJohannes/BITTE-STIL-Baukasten",
+  "license": "MIT",
+  "keywords": ["bild-prompt", "image-prompt", "oer", "accessibility", "diversity"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "BITTE STIL Baukasten",
+    "shortDescription": "Bild-Prompts stilistisch präzise planen.",
+    "longDescription": "Hilft beim Formulieren und Überarbeiten von Bild-Prompts: Inhalt bleibt frei, gestalterische Vorgaben werden systematisch und verantwortungsvoll präzisiert.",
+    "developerName": "Johannes Koch",
+    "category": "Productivity",
+    "capabilities": ["Write"],
+    "websiteURL": "https://hallojohannes.github.io/BITTE-STIL-Baukasten/",
+    "brandColor": "#000000",
+    "defaultPrompt": "Hilf mir, einen Bild-Prompt mit dem BITTE STIL Baukasten zu formulieren."
+  }
+}

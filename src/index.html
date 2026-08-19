@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="application-name" content="BITTE STIL Baukasten">
+<meta name="application-version" content="__BITTE_STIL_VERSION__">
+<meta name="build" content="__BITTE_STIL_BUILD__">
+<title>BITTE STIL Baukasten</title>
+<style>
+  :root{
+    --ink:#000;
+    --paper:#fff;
+    --line:#000;
+    --muted:#6b6b6b;
+    --field-h:44px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;border-radius:0 !important;}
+  html,body{background:var(--paper);color:var(--ink);
+    font-family:"Helvetica Neue",Helvetica,Arial,"Segoe UI",sans-serif;
+    font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;}
+  ::selection{background:#000;color:#fff;}
+  .wrap{width:min(96vw,1680px);margin:0 auto;padding:28px 0 40px;}
+
+  .top{display:flex;align-items:center;justify-content:space-between;gap:14px;
+    border-bottom:2px solid var(--line);padding-bottom:14px;margin-bottom:26px;}
+  h1{font-size:clamp(22px,2.6vw,34px);font-weight:700;letter-spacing:-0.02em;}
+  h1 .thin{font-weight:300;}
+  .lang{display:inline-flex;border:1px solid #000;}
+  .lang button{font:inherit;font-size:13px;font-weight:600;letter-spacing:.08em;background:#fff;color:#000;
+    border:0;padding:8px 18px;cursor:pointer;}
+  .lang button.on{background:#000;color:#fff;}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 26px;}
+  @media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.grid{grid-template-columns:1fr;}}
+  .field label{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;margin-bottom:6px;}
+  .field label .soft{font-weight:400;text-transform:none;letter-spacing:0;}
+  .field .hint{font-size:11px;color:var(--muted);margin-top:5px;}
+  select,input[type=text]{
+    width:100%;height:var(--field-h);border:1px solid var(--line);background:#fff;color:#000;
+    font:inherit;font-size:15px;padding:0 12px;appearance:none;-webkit-appearance:none;outline:none;}
+  select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' stroke='black' stroke-width='1.6' fill='none'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;cursor:pointer;}
+  select:focus,input:focus{outline:2px solid #000;outline-offset:-1px;}
+  input.custom{margin-top:8px;display:none;}
+  input.custom.show{display:block;}
+  .check{display:flex;align-items:flex-start;gap:10px;margin-top:10px;cursor:pointer;font-size:14px;}
+  .check input{width:18px;height:18px;accent-color:#000;flex:none;margin-top:2px;cursor:pointer;}
+  .checklist{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px;border:1px solid #000;padding:12px 14px;}
+  @media(max-width:900px){.checklist{grid-template-columns:1fr;}}
+  .checklist label{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;font-weight:400;
+    text-transform:none;letter-spacing:0;margin:0;cursor:pointer;line-height:1.35;}
+  .checklist input{width:16px;height:16px;accent-color:#000;flex:none;margin-top:2px;cursor:pointer;}
+
+  #palette{display:none;grid-column:1/-1;border:1px solid #000;padding:16px 18px 18px;margin-top:-6px;}
+  #palette.show{display:block;}
+  #palette .pt{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;}
+  #palette .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 18px;}
+  @media(max-width:1100px){#palette .pgrid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){#palette .pgrid{grid-template-columns:1fr;}}
+  #palette .pgrid label{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:5px;}
+  #palette .phint{font-size:11px;color:var(--muted);margin-top:10px;}
+
+  #exphead{margin-top:26px;border:1px solid #000;background:#fff;width:100%;
+    display:flex;align-items:center;justify-content:space-between;
+    font:inherit;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    padding:12px 16px;cursor:pointer;}
+  #exphead .chev{transition:transform .2s;font-size:13px;}
+  #exphead.open .chev{transform:rotate(180deg);}
+  #exphead .ctx{font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:12.5px;}
+  #expbody{display:none;border:1px solid #000;border-top:0;padding:18px;}
+  #expbody.show{display:block;}
+  #expbody .egrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 22px;}
+  @media(max-width:1100px){#expbody .egrid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){#expbody .egrid{grid-template-columns:1fr;}}
+  #expbody .free{margin-top:16px;}
+  #expbody .free label{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;}
+
+  .out-head{display:flex;align-items:center;justify-content:space-between;gap:14px;
+    margin:34px 0 0;border-top:2px solid var(--line);padding-top:22px;flex-wrap:wrap;}
+  .out-head .t{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;}
+  .output{border:1px solid var(--line);background:#fff;margin-top:14px;}
+  #prompt{padding:22px 24px;font-size:16.5px;line-height:1.6;min-height:120px;white-space:pre-wrap;}
+  #prompt .ph{background:#f2f2f2;box-shadow:inset 0 0 0 1px #d9d9d9;padding:1px 4px;}
+  #prompt .fix{text-decoration:underline;text-underline-offset:3px;}
+  .actions{display:flex;border-top:1px solid var(--line);}
+  .actions button{font:inherit;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    background:#000;color:#fff;border:0;padding:13px 26px;cursor:pointer;}
+  .actions button:hover{background:#2a2a2a;}
+  .actions .ok{align-self:center;margin-left:14px;font-size:13px;color:var(--muted);opacity:0;transition:opacity .3s;}
+  .actions .ok.show{opacity:1;}
+  .why{font-size:12.5px;color:var(--muted);margin-top:10px;max-width:115ch;}
+  .why b{color:#000;}
+  .why a{color:#000;}
+
+  .rules{margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #000;}
+  @media(max-width:900px){.rules{grid-template-columns:1fr;}}
+  .rules div{padding:14px 18px;font-size:13.5px;border-right:1px solid #000;}
+  .rules div:last-child{border-right:0;}
+  @media(max-width:900px){.rules div{border-right:0;border-bottom:1px solid #000;}.rules div:last-child{border-bottom:0;}}
+  .rules b{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px;}
+
+  .colo{margin-top:34px;font-size:12px;color:var(--muted);}
+  .colo a{color:#000;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <h1>BITTE STIL <span class="thin">Baukasten</span></h1>
+    <div class="lang">
+      <button id="de" class="on" type="button">Deutsch</button>
+      <button id="en" type="button">English</button>
+    </div>
+  </div>
+
+  <div class="grid" id="form">
+
+    <div class="field">
+      <label for="zweck" data-s="l_zweck"></label>
+      <select id="zweck"></select>
+      <input class="custom" id="zweck_c" type="text" data-p="p_zweck">
+    </div>
+
+    <div class="field">
+      <label for="typ" data-s="l_typ"></label>
+      <select id="typ"></select>
+      <input class="custom" id="typ_c" type="text" data-p="p_typ">
+    </div>
+
+    <div class="field">
+      <label for="stil" data-s="l_stil"></label>
+      <select id="stil"></select>
+      <input class="custom" id="stil_c" type="text" data-p="p_stil">
+      <p class="hint" id="stilhint"></p>
+    </div>
+
+    <div class="field">
+      <label for="farbe" data-s="l_farbe"></label>
+      <select id="farbe"></select>
+      <input class="custom" id="farbe_c" type="text" data-p="p_farbe">
+    </div>
+
+    <div id="palette">
+      <p class="pt" data-s="pal_t"></p>
+      <div class="pgrid">
+        <div><label for="col_p" data-s="pal_p"></label><input type="text" id="col_p" data-p="pp_p"></div>
+        <div><label for="col_s" data-s="pal_s"></label><input type="text" id="col_s" data-p="pp_s"></div>
+        <div><label for="col_a" data-s="pal_a"></label><input type="text" id="col_a" data-p="pp_a"></div>
+        <div><label for="col_b" data-s="pal_b"></label><input type="text" id="col_b" data-p="pp_b"></div>
+      </div>
+      <p class="phint" data-s="pal_hint"></p>
+    </div>
+
+    <div class="field">
+      <label for="format" data-s="l_format"></label>
+      <select id="format"></select>
+      <input class="custom" id="format_c" type="text" data-p="p_format">
+    </div>
+
+    <div class="field">
+      <label for="detail" data-s="l_detail"></label>
+      <select id="detail"></select>
+    </div>
+
+    <div class="field">
+      <label for="grund" data-s="l_grund"></label>
+      <select id="grund"></select>
+    </div>
+
+    <div class="field">
+      <label for="stimmung" data-s="l_stimmung"></label>
+      <select id="stimmung"></select>
+    </div>
+
+    <div class="field" style="grid-column:span 2;">
+      <label data-s="l_bias"></label>
+      <div class="checklist" id="biaslist"></div>
+      <input id="bias_c" type="text" data-p="p_bias" style="margin-top:8px;">
+      <p class="hint" data-s="bias_hint"></p>
+    </div>
+
+    <div class="field" style="grid-column:span 2;">
+      <label for="nicht" data-s="l_nicht"></label>
+      <input type="text" id="nicht" data-p="p_nicht">
+    </div>
+
+    <div class="field" style="grid-column:span 2;">
+      <label data-s="l_serie"></label>
+      <label class="check"><input type="checkbox" id="serie">
+        <span data-s="serie_txt"></span></label>
+    </div>
+
+    <div class="field" style="grid-column:span 2;">
+      <label data-s="l_alt"></label>
+      <label class="check"><input type="checkbox" id="alttext">
+        <span data-s="alt_txt"></span></label>
+    </div>
+
+  </div>
+
+  <button id="exphead" type="button">
+    <span><span data-s="exp_t"></span> <span class="ctx" id="expctx"></span></span>
+    <span class="chev">▾</span>
+  </button>
+  <div id="expbody">
+    <div class="egrid" id="expfields"></div>
+    <div class="free">
+      <label for="expfree" data-s="exp_free"></label>
+      <input type="text" id="expfree" data-p="p_expfree">
+    </div>
+  </div>
+
+  <div class="out-head">
+    <span class="t" data-s="out_t"></span>
+  </div>
+
+  <div class="output">
+    <div id="prompt"></div>
+    <div class="actions">
+      <button id="copy" type="button" data-s="copy"></button>
+      <span class="ok" id="ok" data-s="copied"></span>
+    </div>
+  </div>
+  <p class="why" id="why"></p>
+
+  <div class="rules" id="rules"></div>
+
+  <p class="colo" id="colo"></p>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- UI-Texte ---------- */
+var STR = {
+  l_zweck:{de:"Wofür?",en:"What for?"},
+  l_typ:{de:"Bildtyp",en:"Image type"},
+  l_stil:{de:"Stil",en:"Style"},
+  l_farbe:{de:"Farbwelt",en:"Colours"},
+  l_format:{de:"Format",en:"Format"},
+  l_detail:{de:"Detailtiefe",en:"Level of detail"},
+  l_grund:{de:"Hintergrund",en:"Background"},
+  l_stimmung:{de:"Anmutung",en:"Tone"},
+  l_nicht:{de:"Was soll <u>nicht</u> ins Bild? <span class='soft'>(optional)</span>",en:"What should <u>not</u> appear? <span class='soft'>(optional)</span>"},
+  l_serie:{de:"Serie",en:"Series"},
+  serie_txt:{de:"Bild ist Teil einer Serie – Formulierung für Wiedererkennbarkeit (gleicher Stil, gleiche Palette, gleiches Kompositionsschema) ergänzen",
+             en:"Image is part of a series – add wording for consistency (same style, same palette, same compositional scheme)"},
+  l_bias:{de:"Vielfalt &amp; Stereotype",en:"Diversity &amp; stereotypes"},
+  bias_hint:{de:"KI-Modelle reproduzieren häufig gesellschaftliche Stereotype. Diese Angabe bittet das Modell um eine bewusste, gleichwertige Darstellung – sie ersetzt nicht den prüfenden Blick auf das Ergebnis.",
+             en:"AI models often reproduce social stereotypes. This setting asks the model for a deliberate, equitable depiction – it does not replace critically reviewing the result."},
+  p_bias:{de:"Eigene Ergänzung: Worauf soll besonders geachtet werden?",en:"Custom addition: what should receive particular attention?"},
+  l_alt:{de:"Barrierefreiheit",en:"Accessibility"},
+  alt_txt:{de:"Alternativtext mitliefern lassen – die KI soll zusätzlich einen Alt-Text für Screenreader formulieren",
+           en:"Request an alt text – the AI should additionally provide an alt text for screen readers"},
+  pal_t:{de:"Konkrete Farben — leer lassen, was nicht gebraucht wird",en:"Specific colours — leave blank what you don't need"},
+  pal_p:{de:"Primärfarbe",en:"Primary colour"},
+  pal_s:{de:"Sekundärfarbe",en:"Secondary colour"},
+  pal_a:{de:"Akzentfarbe",en:"Accent colour"},
+  pal_b:{de:"Hintergrund",en:"Background"},
+  pal_hint:{de:"Farbnamen oder Hex-Codes – beides funktioniert. Hochschul-CI? Einfach die CI-Farben eintragen.",
+            en:"Colour names or hex codes – both work. Institutional branding? Just enter your CI colours."},
+  exp_t:{de:"Du Profi!",en:"Pro mode"},
+  exp_ctx:{de:"— abgestimmt auf: ",en:"— tailored to: "},
+  exp_free:{de:"Feinschliff (frei, optional)",en:"Fine-tuning (free text, optional)"},
+  exp_none:{de:"— keine Angabe —",en:"— no preference —"},
+  exp_custom:{de:"Eigene Angabe …",en:"Custom …"},
+  out_t:{de:"Deine Prompt-Formulierung",en:"Your prompt wording"},
+  copy:{de:"Kopieren",en:"Copy"},
+  copied:{de:"In die Zwischenablage kopiert.",en:"Copied to clipboard."},
+  p_zweck:{de:"Eigener Zweck …",en:"Custom purpose …"},
+  p_typ:{de:"Eigener Bildtyp …",en:"Custom image type …"},
+  p_stil:{de:"Eigener Stil …",en:"Custom style …"},
+  p_farbe:{de:"z. B. Petrol …",en:"e.g. teal …"},
+  p_format:{de:"Eigenes Format …",en:"Custom format …"},
+  p_nicht:{de:"z. B. Text im Bild, Logos, fotorealistische Gesichter …",en:"e.g. text in the image, logos, photorealistic faces …"},
+  p_expfree:{de:"Weitere gestalterische Details in eigenen Worten …",en:"Further design details in your own words …"},
+  pp_p:{de:"z. B. Petrol / #123c4a",en:"e.g. teal / #123c4a"},
+  pp_s:{de:"z. B. Mint / #e2f1f1",en:"e.g. mint / #e2f1f1"},
+  pp_a:{de:"z. B. Koralle / #f25d68",en:"e.g. coral / #f25d68"},
+  pp_b:{de:"z. B. Weiß",en:"e.g. white"},
+  p_expcustom:{de:"Eigene Formulierung …",en:"Your own wording …"},
+  warn:{de:"Vorsicht bei fotorealistischen Personen: Persönlichkeitsrechte! Besser stilisiert arbeiten (Comic, Zeichnung …).",
+        en:"Careful with photorealistic people: personality rights! Better to work stylised (comic, drawing …)."},
+  why:{de:"<b>Warum der letzte Satz?</b> Die europäische KI-Verordnung (EU AI Act) setzt auf Transparenz bei KI-generierten Inhalten. Wer die Kennzeichnung direkt ins Bild holt, kann sie nicht mehr vergessen – zusätzlich gehört sie in Bildunterschrift oder Materialangabe, z.&nbsp;B.: „KI-generiert (Tool). Gemeinfrei. Prompt: XY. Anpassungen: XY.“ Mehr zu Recht &amp; KI im <a href='https://www.twillo.de/blog/?_blog-filter-cat=rechtliches' target='_blank' rel='noopener'>twillo-Blog (Kategorie „Rechtliches“)</a>.",
+       en:"<b>Why the final sentence?</b> The European AI Act relies on transparency for AI-generated content. If the disclosure is placed inside the image itself, it cannot be forgotten – it also belongs in the caption or material notes, e.g.: “AI-generated (tool). Public domain. Prompt: XY. Edits: XY.” More on legal questions (in German) on the <a href='https://www.twillo.de/blog/?_blog-filter-cat=rechtliches' target='_blank' rel='noopener'>twillo blog (category “Rechtliches”)</a>."},
+  rules:{de:[
+      ["Nicht den ersten Entwurf nehmen","Der erste Vorschlag ist der Durchschnitt von allem – deshalb sehen so viele KI-Bilder gleich aus. Variieren, neu würfeln, präzisieren."],
+      ["Iterieren statt akzeptieren","Stil, Farben und Komposition selbst bestimmen und nachschärfen – die KI liefert Rohmaterial, kein Endprodukt."],
+      ["Kennzeichnen","KI-Anteil sichtbar machen: im Bild, in der Bildunterschrift und in den Materialangaben. Wasserzeichen der Tools nicht entfernen."]],
+    en:[
+      ["Don't take the first draft","The first suggestion is the average of everything – that's why so many AI images look alike. Vary, re-roll, refine."],
+      ["Iterate, don't accept","Decide style, colours and composition yourself and keep sharpening – AI delivers raw material, not a final product."],
+      ["Disclose","Make the AI share visible: in the image, in the caption and in the material notes. Never remove tool watermarks."]]},
+  colo:{de:"Diese Anwendung wurde von <a href='https://www.linkedin.com/in/johannes-koch-1964a3240' target='_blank' rel='noopener'>Johannes Koch</a> mithilfe von KI erstellt und darf gern geteilt und weitergegeben werden. Lizenz: <a href='https://opensource.org/license/mit' target='_blank' rel='license noopener'>MIT</a>.",
+        en:"This application was created by <a href='https://www.linkedin.com/in/johannes-koch-1964a3240' target='_blank' rel='noopener'>Johannes Koch</a> with the help of AI and may be shared and passed on freely. License: <a href='https://opensource.org/license/mit' target='_blank' rel='license noopener'>MIT</a>."}
+};
+
+/* ---------- Optionen (l = deutsches Label, le = englisches Label) ---------- */
+var OPT = {
+  zweck: [
+    {l:"Foliensatz / Präsentation",le:"Slide deck / presentation", de:"einen Foliensatz in der Hochschullehre", en:"a slide deck in higher education teaching"},
+    {l:"Arbeitsblatt / Handout",le:"Worksheet / handout", de:"ein Arbeitsblatt in der Hochschullehre", en:"a worksheet in higher education teaching"},
+    {l:"Skript / Reader",le:"Lecture script / reader", de:"ein Vorlesungsskript", en:"a lecture script"},
+    {l:"Online-Kurs / Lernmodul",le:"Online course / learning module", de:"einen Online-Kurs", en:"an online course"},
+    {l:"Poster / Aushang",le:"Poster / notice", de:"ein Poster", en:"a poster"},
+    {l:"OER auf twillo.de",le:"OER on twillo.de", de:"ein offenes Bildungsmaterial (OER)", en:"an open educational resource (OER)"},
+    {l:"Eigene Angabe …",le:"Custom …", v:"custom"}
+  ],
+  typ: [
+    {l:"Illustration",le:"Illustration", k:"illu", de:"eine Illustration", en:"an illustration"},
+    {l:"Infografik / Schaubild",le:"Infographic / diagram", k:"info", de:"eine sachlich korrekte Infografik", en:"a factually accurate infographic"},
+    {l:"Prozessdarstellung",le:"Process diagram", k:"proz", de:"eine schematische Prozessdarstellung mit klar getrennten, nummerierten Schritten", en:"a schematic process diagram with clearly separated, numbered steps"},
+    {l:"Comic / Cartoon",le:"Comic / cartoon", k:"comic", de:"einen Comic", en:"a comic"},
+    {l:"Einzelszene",le:"Single scene", k:"szene", de:"die Darstellung einer einzelnen Szene", en:"a depiction of a single scene"},
+    {l:"Icon / Piktogramm",le:"Icon / pictogram", k:"icon", de:"ein reduziertes Piktogramm", en:"a reduced pictogram"},
+    {l:"Porträt (nicht fotorealistisch)",le:"Portrait (non-photorealistic)", k:"portrait", de:"ein stilisiertes, nicht fotorealistisches Porträt", en:"a stylised, non-photorealistic portrait"},
+    {l:"Eigene Angabe …",le:"Custom …", v:"custom", k:"generic"}
+  ],
+  stil: [
+    {l:"Flat Design",le:"Flat design", de:"im flächigen Flat-Design", en:"in flat design"},
+    {l:"Isometrisch",le:"Isometric", de:"im isometrischen Stil", en:"in isometric style"},
+    {l:"Strichzeichnung / Outline",le:"Line drawing / outline", de:"als reduzierte Strichzeichnung", en:"as a minimal line drawing"},
+    {l:"Bleistiftzeichnung",le:"Pencil sketch", de:"als simplifizierte Bleistiftzeichnung", en:"as a simplified pencil sketch"},
+    {l:"Strichmännchen",le:"Stick figures", de:"mit einfachen Strichmännchen", en:"using simple stick figures"},
+    {l:"Aquarell",le:"Watercolour", de:"im Aquarell-Stil", en:"in watercolour style"},
+    {l:"Linoldruck",le:"Linocut", de:"im Stil eines Linoldrucks", en:"in linocut style"},
+    {l:"Paper-Cut",le:"Paper cut", de:"im Paper-Cut-Stil (Scherenschnitt aus Papier)", en:"in paper-cut style"},
+    {l:"Pop-Art",le:"Pop art", de:"im Pop-Art-Stil", en:"in pop-art style"},
+    {l:"Abstrakt malerisch",le:"Abstract painterly", de:"in einem abstrakten, malerischen Stil (Digital Painting)", en:"in an abstract painterly style (digital painting)"},
+    {l:"Cinematisch",le:"Cinematic", de:"in einem cinematischen Stil", en:"in a cinematic style"},
+    {l:"Fotorealistisch",le:"Photorealistic", de:"fotorealistisch", en:"photorealistic", warn:1},
+    {l:"Eigene Angabe …",le:"Custom …", v:"custom"}
+  ],
+  farbe: [
+    {l:"Konkrete Farben festlegen …",le:"Set specific colours …", v:"palette"},
+    {l:"Gedeckt & sachlich",le:"Muted & restrained", de:"Verwende eine gedeckte, sachliche Farbpalette mit wenigen Hauptfarben.", en:"Use a muted, restrained colour palette with only a few main colours."},
+    {l:"Freundlich & hell",le:"Friendly & bright", de:"Verwende eine helle, freundliche Farbpalette mit 3–5 festen Hauptfarben.", en:"Use a bright, friendly colour palette with 3–5 fixed main colours."},
+    {l:"Kräftig & kontrastreich",le:"Bold & high-contrast", de:"Verwende wenige, kräftige Farben mit hohem Kontrast.", en:"Use a few bold colours with strong contrast."},
+    {l:"Pastell",le:"Pastel", de:"Verwende zurückhaltende Pastellfarben.", en:"Use soft pastel colours."},
+    {l:"Schwarz-Weiß",le:"Black & white", de:"Halte das Bild in Schwarz-Weiß.", en:"Keep the image black and white."},
+    {l:"Monochrom (eine Farbe) …",le:"Monochrome (one colour) …", v:"custom", de:"Halte das Bild monochrom in Abstufungen von {X}.", en:"Keep the image monochrome in shades of {X}."}
+  ],
+  format: [
+    {l:"Querformat 16:9",le:"Landscape 16:9", de:"im Querformat 16:9", en:"in 16:9 landscape format"},
+    {l:"Querformat 4:3",le:"Landscape 4:3", de:"im Querformat 4:3", en:"in 4:3 landscape format"},
+    {l:"Quadratisch 1:1",le:"Square 1:1", de:"im quadratischen Format 1:1", en:"in square 1:1 format"},
+    {l:"Hochformat 3:4",le:"Portrait 3:4", de:"im Hochformat 3:4", en:"in 3:4 portrait format"},
+    {l:"Hochformat 9:16",le:"Portrait 9:16", de:"im Hochformat 9:16", en:"in 9:16 portrait format"},
+    {l:"DIN A4 hoch",le:"A4 portrait", de:"im Hochformat entsprechend DIN A4", en:"in portrait format matching DIN A4"},
+    {l:"DIN A4 quer",le:"A4 landscape", de:"im Querformat entsprechend DIN A4", en:"in landscape format matching DIN A4"},
+    {l:"Banner (sehr breit)",le:"Banner (very wide)", de:"als sehr breites Bannerformat", en:"as a very wide banner format"},
+    {l:"Eigene Angabe …",le:"Custom …", v:"custom"}
+  ],
+  detail: [
+    {l:"Stark reduziert / schematisch",le:"Highly reduced / schematic", de:"Bleibe stark reduziert und schematisch; verzichte auf schmückende Details.", en:"Keep it highly reduced and schematic; avoid decorative detail."},
+    {l:"Mittlere Detailtiefe",le:"Medium detail", de:"Wähle eine mittlere Detailtiefe: erkennbar, aber nicht überladen.", en:"Choose a medium level of detail: recognisable but not cluttered."},
+    {l:"Detailreich",le:"Rich in detail", de:"Arbeite detailreich, ohne die zentrale Bildaussage zu überlagern.", en:"Work with rich detail without obscuring the central message."}
+  ],
+  grund: [
+    {l:"Weiß / neutral",le:"White / neutral", de:"Der Hintergrund bleibt weiß bzw. neutral und ruhig.", en:"The background remains white or neutral and calm."},
+    {l:"Dezent angedeutet",le:"Subtly indicated", de:"Der Hintergrund ist nur dezent angedeutet.", en:"The background is only subtly indicated."},
+    {l:"Ausgestaltete Szene",le:"Full scene", de:"Der Hintergrund darf als Szene ausgestaltet sein, ohne vom Motiv abzulenken.", en:"The background may be a full scene without distracting from the subject."}
+  ],
+  stimmung: [
+    {l:"Sachlich & neutral",le:"Factual & neutral", de:"Die Anmutung ist sachlich und neutral.", en:"The overall tone is factual and neutral."},
+    {l:"Freundlich & zugänglich",le:"Friendly & approachable", de:"Die Anmutung ist freundlich und zugänglich.", en:"The overall tone is friendly and approachable."},
+    {l:"Verspielt",le:"Playful", de:"Die Anmutung darf verspielt sein.", en:"The overall tone may be playful."},
+    {l:"Ernst & konzentriert",le:"Serious & focused", de:"Die Anmutung ist ernst und konzentriert.", en:"The overall tone is serious and focused."}
+  ],
+  bias: [
+    {l:"Stereotype allgemein vermeiden",le:"Avoid stereotypes in general",
+     de:"Achte darauf, gängige Stereotype und Klischees nicht zu reproduzieren; stelle Menschen vielfältig und ohne Schablonen dar.",
+     en:"Take care not to reproduce common stereotypes or clichés; depict people in varied, non-formulaic ways."},
+    {l:"Vielfalt der Gesellschaft abbilden",le:"Reflect societal diversity",
+     de:"Bilde Menschen in ihrer Vielfalt ab – unterschiedlich etwa in Alter, Herkunft, Hautfarbe und Körperform – ohne einzelne Personen auf Merkmale zu reduzieren oder als Ausnahme hervorzuheben.",
+     en:"Depict people in their diversity – varying in age, background, skin colour and body shape – without reducing anyone to a single attribute or singling anyone out as an exception."},
+    {l:"Geschlechter gleichwertig darstellen",le:"Depict genders equitably",
+     de:"Stelle Geschlechter gleichwertig dar und vermeide geschlechtsbezogene Klischees in Aussehen, Kleidung und Tätigkeit.",
+     en:"Depict genders as equals and avoid gender clichés in appearance, clothing and activity."},
+    {l:"Rollen unabhängig von Merkmalen verteilen",le:"Assign roles independent of attributes",
+     de:"Verteile Rollen und Tätigkeiten – etwa Leitung, Lehre, Technik oder Fürsorge – unabhängig von Geschlecht, Alter und Herkunft.",
+     en:"Assign roles and activities – such as leadership, teaching, technology or care work – independent of gender, age and background."},
+    {l:"Behinderung selbstverständlich mitdenken",le:"Include disability as a matter of course",
+     de:"Berücksichtige Menschen mit Behinderung als selbstverständlichen, aktiv handelnden Teil der Situation – nicht als Ausnahme und nicht zur Illustration von Hilfsbedürftigkeit.",
+     en:"Include disabled people as a natural, actively participating part of the scene – not as an exception and not to illustrate neediness."},
+    {l:"Altersbilder ausgewogen halten",le:"Keep age representation balanced",
+     de:"Zeige verschiedene Altersgruppen gleichwertig und vermeide Altersklischees.",
+     en:"Show different age groups as equals and avoid age-related clichés."}
+  ]
+};
+
+/* ---------- Expertenfelder je Bildtyp ---------- */
+var EXPERT = {
+  illu: [
+    {label:{de:"Linienführung",en:"Line work"}, opts:[
+      {l:"Klare Konturen",le:"Clear outlines", de:"Arbeite mit klaren, geschlossenen Konturen.", en:"Use clear, closed outlines."},
+      {l:"Weiche Kanten",le:"Soft edges", de:"Arbeite mit weichen, fließenden Kanten ohne harte Konturen.", en:"Use soft, flowing edges without hard outlines."},
+      {l:"Ohne Outline, nur Flächen",le:"No outline, shapes only", de:"Verzichte auf Konturlinien und arbeite rein mit Farbflächen.", en:"Avoid outlines entirely and work with colour shapes only."}]},
+    {label:{de:"Perspektive",en:"Perspective"}, opts:[
+      {l:"Frontal / flächig",le:"Frontal / flat", de:"Zeige das Motiv frontal und flächig, ohne räumliche Tiefe.", en:"Show the subject frontally and flat, without spatial depth."},
+      {l:"Leichte Tiefe",le:"Slight depth", de:"Deute räumliche Tiefe nur leicht an.", en:"Suggest spatial depth only slightly."},
+      {l:"Isometrisch",le:"Isometric", de:"Nutze eine isometrische Perspektive.", en:"Use an isometric perspective."}]},
+    {label:{de:"Textur",en:"Texture"}, opts:[
+      {l:"Glatt & digital",le:"Smooth & digital", de:"Halte Flächen glatt und digital sauber.", en:"Keep surfaces smooth and digitally clean."},
+      {l:"Leichte Körnung",le:"Light grain", de:"Gib den Flächen eine leichte, papierartige Körnung.", en:"Give surfaces a light, paper-like grain."},
+      {l:"Sichtbarer Farbauftrag",le:"Visible strokes", de:"Lasse den Farbauftrag (Pinsel/Stift) sichtbar.", en:"Let the brush or pencil strokes remain visible."}]}
+  ],
+  info: [
+    {label:{de:"Beschriftung",en:"Labelling"}, opts:[
+      {l:"Knapp, deutsch",le:"Concise, German", de:"Beschrifte zentrale Elemente knapp und auf Deutsch.", en:"Label key elements concisely, in German."},
+      {l:"Knapp, englisch",le:"Concise, English", de:"Beschrifte zentrale Elemente knapp und auf Englisch.", en:"Label key elements concisely, in English."},
+      {l:"Ohne Text",le:"No text", de:"Verzichte vollständig auf Text im Bild; Beschriftungen ergänze ich selbst.", en:"Avoid all text in the image; I will add labels myself."}]},
+    {label:{de:"Anordnung",en:"Arrangement"}, opts:[
+      {l:"Zentrales Motiv",le:"Central subject", de:"Ordne die Information um ein zentrales Motiv an.", en:"Arrange the information around one central subject."},
+      {l:"Links nach rechts",le:"Left to right", de:"Ordne die Information in einer klaren Leserichtung von links nach rechts an.", en:"Arrange the information in a clear left-to-right reading order."},
+      {l:"Oben nach unten",le:"Top to bottom", de:"Ordne die Information von oben nach unten an.", en:"Arrange the information from top to bottom."}]},
+    {label:{de:"Datenehrlichkeit",en:"Data honesty"}, opts:[
+      {l:"Nur belegte Angaben",le:"Only provided facts", de:"Erfinde keine Zahlen, Fakten oder Fachbegriffe; stelle nur die genannten Inhalte dar.", en:"Do not invent numbers, facts or terms; depict only the content provided."},
+      {l:"Symbolisch erlaubt",le:"Symbolic allowed", de:"Symbolische, nicht-wörtliche Darstellungen sind erlaubt.", en:"Symbolic, non-literal representations are allowed."}]}
+  ],
+  proz: [
+    {label:{de:"Anzahl Schritte",en:"Number of steps"}, opts:[
+      {l:"2",le:"2",de:"Der Prozess umfasst genau 2 Schritte.",en:"The process has exactly 2 steps."},
+      {l:"3",le:"3",de:"Der Prozess umfasst genau 3 Schritte.",en:"The process has exactly 3 steps."},
+      {l:"4",le:"4",de:"Der Prozess umfasst genau 4 Schritte.",en:"The process has exactly 4 steps."},
+      {l:"5",le:"5",de:"Der Prozess umfasst genau 5 Schritte.",en:"The process has exactly 5 steps."},
+      {l:"6",le:"6",de:"Der Prozess umfasst genau 6 Schritte.",en:"The process has exactly 6 steps."}]},
+    {label:{de:"Richtung",en:"Direction"}, opts:[
+      {l:"Links → rechts",le:"Left → right", de:"Die Schritte verlaufen von links nach rechts.", en:"The steps run from left to right."},
+      {l:"Oben → unten",le:"Top → bottom", de:"Die Schritte verlaufen von oben nach unten.", en:"The steps run from top to bottom."},
+      {l:"Kreislauf",le:"Cycle", de:"Die Schritte bilden einen geschlossenen Kreislauf.", en:"The steps form a closed cycle."}]},
+    {label:{de:"Verbindung",en:"Connection"}, opts:[
+      {l:"Pfeile",le:"Arrows", de:"Verbinde die Schritte mit deutlichen Pfeilen.", en:"Connect the steps with clear arrows."},
+      {l:"Nummern ohne Pfeile",le:"Numbers, no arrows", de:"Nummeriere die Schritte deutlich, ohne verbindende Pfeile.", en:"Number the steps clearly, without connecting arrows."},
+      {l:"Getrennte Einzelbilder",le:"Separate tiles", de:"Stelle jeden Schritt als klar getrenntes Einzelbild (Kachel) dar.", en:"Show each step as a clearly separated tile."}]}
+  ],
+  comic: [
+    {label:{de:"Panels",en:"Panels"}, opts:[
+      {l:"Einzelbild",le:"Single frame", de:"Zeige eine einzige Szene ohne Panel-Aufteilung.", en:"Show a single scene without panel layout."},
+      {l:"2 Panels",le:"2 panels", de:"Teile die Handlung in genau 2 Panels.", en:"Split the action into exactly 2 panels."},
+      {l:"4 Panels",le:"4 panels", de:"Teile die Handlung in genau 4 Panels.", en:"Split the action into exactly 4 panels."}]},
+    {label:{de:"Sprechblasen",en:"Speech bubbles"}, opts:[
+      {l:"Keine",le:"None", de:"Verzichte auf Sprechblasen und Text.", en:"Avoid speech bubbles and text."},
+      {l:"Leere Sprechblasen",le:"Empty bubbles", de:"Setze leere Sprechblasen, die ich selbst befüllen kann.", en:"Add empty speech bubbles that I can fill in myself."}]},
+    {label:{de:"Figurenzeichnung",en:"Character design"}, opts:[
+      {l:"Stark vereinfacht",le:"Highly simplified", de:"Zeichne Figuren stark vereinfacht und freundlich.", en:"Draw figures highly simplified and friendly."},
+      {l:"Karikaturesk",le:"Caricatured", de:"Zeichne Figuren leicht karikaturesk mit ausdrucksstarker Mimik.", en:"Draw figures slightly caricatured with expressive faces."},
+      {l:"Neutral & divers",le:"Neutral & diverse", de:"Zeichne Figuren neutral, divers und ohne Stereotype.", en:"Draw figures neutral, diverse and free of stereotypes."}]}
+  ],
+  szene: [
+    {label:{de:"Bildausschnitt",en:"Framing"}, opts:[
+      {l:"Totale",le:"Wide shot", de:"Wähle eine Totale, die die gesamte Umgebung zeigt.", en:"Use a wide shot showing the whole setting."},
+      {l:"Halbtotale",le:"Medium shot", de:"Wähle eine Halbtotale mit Fokus auf die Handlung.", en:"Use a medium shot focused on the action."},
+      {l:"Nahaufnahme",le:"Close-up", de:"Wähle eine Nahaufnahme des zentralen Motivs.", en:"Use a close-up of the central subject."}]},
+    {label:{de:"Kameraperspektive",en:"Camera angle"}, opts:[
+      {l:"Augenhöhe",le:"Eye level", de:"Zeige die Szene auf Augenhöhe.", en:"Show the scene at eye level."},
+      {l:"Leichte Vogelperspektive",le:"Slightly elevated", de:"Zeige die Szene aus leichter Vogelperspektive.", en:"Show the scene from a slightly elevated angle."},
+      {l:"Froschperspektive",le:"Low angle", de:"Zeige die Szene aus der Froschperspektive.", en:"Show the scene from a low angle."}]},
+    {label:{de:"Licht",en:"Lighting"}, opts:[
+      {l:"Neutral & hell",le:"Neutral & bright", de:"Beleuchte die Szene neutral und hell.", en:"Light the scene neutrally and brightly."},
+      {l:"Warm & weich",le:"Warm & soft", de:"Beleuchte die Szene warm und weich.", en:"Light the scene warmly and softly."},
+      {l:"Kontrastreich",le:"High contrast", de:"Setze kontrastreiches, gerichtetes Licht ein.", en:"Use high-contrast, directional lighting."}]}
+  ],
+  icon: [
+    {label:{de:"Strichstärke",en:"Stroke weight"}, opts:[
+      {l:"Dünn",le:"Thin", de:"Verwende eine dünne, gleichmäßige Strichstärke.", en:"Use a thin, even stroke weight."},
+      {l:"Mittel",le:"Medium", de:"Verwende eine mittlere, gleichmäßige Strichstärke.", en:"Use a medium, even stroke weight."},
+      {l:"Kräftig",le:"Bold", de:"Verwende eine kräftige, gleichmäßige Strichstärke.", en:"Use a bold, even stroke weight."}]},
+    {label:{de:"Füllung",en:"Fill"}, opts:[
+      {l:"Outline",le:"Outline", de:"Gestalte das Piktogramm als reine Outline ohne Füllung.", en:"Design the pictogram as pure outline without fill."},
+      {l:"Gefüllt",le:"Filled", de:"Gestalte das Piktogramm als gefüllte Fläche.", en:"Design the pictogram as a solid filled shape."},
+      {l:"Zweifarbig",le:"Two-colour", de:"Gestalte das Piktogramm zweifarbig (Fläche + Akzent).", en:"Design the pictogram in two colours (shape + accent)."}]},
+    {label:{de:"Formsprache",en:"Shape language"}, opts:[
+      {l:"Runde Ecken",le:"Rounded", de:"Nutze eine runde, freundliche Formsprache.", en:"Use rounded, friendly shapes."},
+      {l:"Eckig & technisch",le:"Angular & technical", de:"Nutze eine eckige, technische Formsprache.", en:"Use angular, technical shapes."},
+      {l:"Geometrisch streng",le:"Strictly geometric", de:"Halte alle Formen streng geometrisch, wie auf einem Raster konstruiert.", en:"Keep all shapes strictly geometric, as if built on a grid."}]}
+  ],
+  portrait: [
+    {label:{de:"Ausschnitt",en:"Crop"}, opts:[
+      {l:"Kopf",le:"Head only", de:"Zeige nur den Kopf.", en:"Show the head only."},
+      {l:"Kopf & Schultern",le:"Head & shoulders", de:"Zeige Kopf und Schulterpartie.", en:"Show head and shoulders."},
+      {l:"Halbfigur",le:"Half figure", de:"Zeige die Person als Halbfigur.", en:"Show the person from the waist up."}]},
+    {label:{de:"Blickrichtung",en:"Gaze"}, opts:[
+      {l:"Frontal",le:"Frontal", de:"Die Person blickt frontal in Richtung Betrachtende.", en:"The person faces the viewer frontally."},
+      {l:"Leicht seitlich",le:"Slightly turned", de:"Die Person ist leicht seitlich gedreht.", en:"The person is turned slightly to the side."},
+      {l:"Profil",le:"Profile", de:"Zeige die Person im Profil.", en:"Show the person in profile."}]},
+    {label:{de:"Darstellung",en:"Depiction"}, opts:[
+      {l:"Neutral & respektvoll",le:"Neutral & respectful", de:"Stelle die Person neutral, respektvoll und ohne Stereotype dar.", en:"Depict the person neutrally, respectfully and without stereotypes."},
+      {l:"Freundlich",le:"Friendly", de:"Stelle die Person freundlich und zugewandt dar.", en:"Depict the person as friendly and approachable."}]}
+  ],
+  generic: [
+    {label:{de:"Komposition",en:"Composition"}, opts:[
+      {l:"Zentral",le:"Central", de:"Setze das Motiv zentral ins Bild.", en:"Place the subject centrally."},
+      {l:"Drittel-Regel",le:"Rule of thirds", de:"Komponiere nach der Drittel-Regel.", en:"Compose using the rule of thirds."},
+      {l:"Viel Weißraum",le:"Lots of white space", de:"Lasse bewusst viel ruhigen Weißraum.", en:"Leave plenty of calm white space."}]},
+    {label:{de:"Perspektive",en:"Perspective"}, opts:[
+      {l:"Frontal",le:"Frontal", de:"Zeige das Motiv frontal.", en:"Show the subject frontally."},
+      {l:"Leichte Vogelperspektive",le:"Slightly elevated", de:"Zeige das Motiv aus leichter Vogelperspektive.", en:"Show the subject from a slightly elevated angle."},
+      {l:"Isometrisch",le:"Isometric", de:"Nutze eine isometrische Perspektive.", en:"Use an isometric perspective."}]},
+    {label:{de:"Licht",en:"Lighting"}, opts:[
+      {l:"Neutral & hell",le:"Neutral & bright", de:"Beleuchte neutral und hell.", en:"Use neutral, bright lighting."},
+      {l:"Warm & weich",le:"Warm & soft", de:"Beleuchte warm und weich.", en:"Use warm, soft lighting."}]}
+  ]
+};
+
+var FIX = {
+  de:"Mache im Bild selbst sichtbar, dass es sich um ein KI-generiertes Bild handelt – zum Beispiel durch den gut lesbaren Hinweis „KI-generiert“ im Bild.",
+  en:"Make it visible within the image itself that it is AI-generated – for example with a clearly legible “AI-generated” notice inside the image."
+};
+var PH = {
+  de:"[Beschreibe hier in 1–3 Sätzen deinen Inhalt: Was ist zu sehen, welche Elemente, welche Anordnung?]",
+  en:"[Describe your content here in 1–3 sentences: what is shown, which elements, what arrangement?]"
+};
+
+var lang="de", expOpen=false;
+var $=function(id){return document.getElementById(id);};
+function S(k){return STR[k][lang];}
+
+/* ---------- Selects füllen (sprachabhängig, Auswahl erhalten) ---------- */
+function fill(id){
+  var sel=$(id);
+  var keep=sel.selectedIndex;
+  sel.innerHTML="";
+  OPT[id].forEach(function(o,i){
+    var op=document.createElement("option");
+    op.value=(o.v?o.v+":":"")+i;
+    op.textContent=(lang==="de")?o.l:(o.le||o.l);
+    sel.appendChild(op);
+  });
+  if(keep>=0)sel.selectedIndex=keep;
+}
+function fillAll(){["zweck","typ","stil","farbe","format","detail","grund","stimmung"].forEach(fill);}
+function buildBias(preserve){
+  var wrap=$("biaslist");
+  var saved=[];
+  if(preserve){wrap.querySelectorAll("input").forEach(function(c,i){saved[i]=c.checked;});}
+  wrap.innerHTML="";
+  OPT.bias.forEach(function(o,i){
+    var lb=document.createElement("label");
+    var cb=document.createElement("input");
+    cb.type="checkbox";cb.id="bias_"+i;
+    cb.checked=preserve?!!saved[i]:(i===0);
+    cb.addEventListener("change",build);
+    lb.appendChild(cb);
+    var sp=document.createElement("span");
+    sp.textContent=(lang==="de")?o.l:(o.le||o.l);
+    lb.appendChild(sp);
+    wrap.appendChild(lb);
+  });
+}
+
+function opt(id){
+  var v=$(id).value;
+  var i=parseInt(v.replace(/^[a-z]+:/,""),10);
+  return {o:OPT[id][i],custom:v.indexOf("custom:")===0,palette:v.indexOf("palette:")===0};
+}
+function customVal(id){var e=$(id+"_c");return e?e.value.trim():"";}
+
+/* ---------- statische UI-Texte anwenden ---------- */
+function applyUI(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-s]").forEach(function(e){e.innerHTML=S(e.getAttribute("data-s"));});
+  document.querySelectorAll("[data-p]").forEach(function(e){e.placeholder=STR[e.getAttribute("data-p")][lang];});
+  $("why").innerHTML=S("why");
+  $("colo").innerHTML=S("colo");
+  var r=$("rules");r.innerHTML="";
+  STR.rules[lang].forEach(function(pair){
+    var d=document.createElement("div");
+    d.innerHTML="<b>"+pair[0]+"</b>"+pair[1];
+    r.appendChild(d);
+  });
+}
+
+/* ---------- Expertenmodus ---------- */
+function typKey(){return opt("typ").o.k||"generic";}
+function buildExpert(preserve){
+  var k=typKey();
+  var wrap=$("expfields");
+  var saved=[];
+  if(preserve){
+    wrap.querySelectorAll("select").forEach(function(s,i){
+      saved[i]={v:s.value,c:($("exp_"+i+"_c")||{}).value||""};
+    });
+  }
+  wrap.innerHTML="";
+  (EXPERT[k]||EXPERT.generic).forEach(function(f,fi){
+    var d=document.createElement("div");
+    d.className="field";
+    var lb=document.createElement("label");lb.textContent=f.label[lang];d.appendChild(lb);
+    var sel=document.createElement("select");sel.id="exp_"+fi;
+    var none=document.createElement("option");none.value="";none.textContent=S("exp_none");sel.appendChild(none);
+    f.opts.forEach(function(o,oi){
+      var op=document.createElement("option");op.value=String(oi);op.textContent=(lang==="de")?o.l:(o.le||o.l);sel.appendChild(op);
+    });
+    var cu=document.createElement("option");cu.value="custom";cu.textContent=S("exp_custom");sel.appendChild(cu);
+    d.appendChild(sel);
+    var inp=document.createElement("input");inp.type="text";inp.className="custom";inp.id="exp_"+fi+"_c";
+    inp.placeholder=S("p_expcustom");d.appendChild(inp);
+    wrap.appendChild(d);
+    if(preserve&&saved[fi]){
+      sel.value=saved[fi].v;
+      if(sel.value===""&&saved[fi].v!==""){sel.value="";}
+      inp.value=saved[fi].c;
+      inp.classList.toggle("show",sel.value==="custom");
+    }
+    sel.addEventListener("change",function(){
+      inp.classList.toggle("show",sel.value==="custom");
+      build();
+    });
+    inp.addEventListener("input",build);
+  });
+  var tl=opt("typ").o;
+  $("expctx").textContent=S("exp_ctx")+((lang==="de")?tl.l:(tl.le||tl.l)).replace(" …","").replace("Custom","custom");
+}
+function expertParts(){
+  if(!expOpen)return [];
+  var k=typKey(),parts=[];
+  (EXPERT[k]||EXPERT.generic).forEach(function(f,fi){
+    var sel=$("exp_"+fi);
+    if(!sel||sel.value==="")return;
+    if(sel.value==="custom"){
+      var t=($("exp_"+fi+"_c").value||"").trim();
+      if(t)parts.push(t.replace(/[.!?]?$/,"."));
+    }else{
+      var o=f.opts[parseInt(sel.value,10)];
+      parts.push(lang==="de"?o.de:o.en);
+    }
+  });
+  var free=$("expfree").value.trim();
+  if(free)parts.push(free.replace(/[.!?]?$/,"."));
+  return parts;
+}
+
+/* ---------- Farbsatz ---------- */
+function colorSentence(){
+  var f=opt("farbe");
+  var de=lang==="de";
+  if(f.palette){
+    var m=[];
+    var p=$("col_p").value.trim(),s=$("col_s").value.trim(),a=$("col_a").value.trim(),b=$("col_b").value.trim();
+    if(de){
+      if(p)m.push("Primärfarbe "+p);
+      if(s)m.push("Sekundärfarbe "+s);
+      if(a)m.push("Akzentfarbe "+a);
+      if(b)m.push("Hintergrund in "+b);
+      if(!m.length)return "Verwende eine feste Farbpalette aus 3–5 Farben.";
+      return "Verwende eine feste Farbpalette – "+m.join(", ")+". Keine weiteren Farben.";
+    }else{
+      if(p)m.push("primary colour "+p);
+      if(s)m.push("secondary colour "+s);
+      if(a)m.push("accent colour "+a);
+      if(b)m.push("background in "+b);
+      if(!m.length)return "Use a fixed palette of 3–5 colours.";
+      return "Use a fixed colour palette – "+m.join(", ")+". No other colours.";
+    }
+  }
+  if(f.custom){
+    var cv=customVal("farbe");
+    var t=f.o[de?"de":"en"]||"";
+    return t.replace("{X}",cv||(de?"[deine Farbe]":"[your colour]"));
+  }
+  return f.o[de?"de":"en"];
+}
+
+/* ---------- Prompt bauen ---------- */
+function build(){
+  var z=opt("zweck"),t=opt("typ"),s=opt("stil"),fo=opt("format"),
+      d=opt("detail"),g=opt("grund"),st=opt("stimmung");
+  var de=lang==="de";
+  var biasParts=[];
+  OPT.bias.forEach(function(o,i){
+    var cb=$("bias_"+i);
+    if(cb&&cb.checked)biasParts.push(o[de?"de":"en"]);
+  });
+  var bv=$("bias_c").value.trim();
+  if(bv)biasParts.push((de?"Achte bei der Darstellung besonders auf: ":"Pay particular attention in the depiction to: ")+bv+".");
+  var biasSatz=biasParts.join(" ");
+  var altSatz=$("alttext").checked
+    ?(de?"Formuliere zusätzlich einen Alternativtext, der die zentrale Bildaussage für Screenreader beschreibt."
+        :"Additionally, provide an alt text describing the image's key message for screen readers.")
+    :"";
+  $("stilhint").textContent=s.o.warn?S("warn"):"";
+
+  var typTxt=t.custom?(customVal("typ")||(de?"ein Bild":"an image")):t.o[de?"de":"en"];
+  var stilTxt=s.custom?customVal("stil"):s.o[de?"de":"en"];
+  var foTxt=fo.custom?customVal("format"):fo.o[de?"de":"en"];
+  var zTxt=z.custom?customVal("zweck"):z.o[de?"de":"en"];
+
+  var s1=(de?"Erstelle ":"Create ")+typTxt+(stilTxt?" "+stilTxt:"")+(foTxt?" "+foTxt:"")+".";
+  var zweckSatz=zTxt?(de?"Das Bild wird für "+zTxt+" verwendet.":"The image will be used for "+zTxt+"."):"";
+  var neg=$("nicht").value.trim();
+  var negSatz=neg?(de?"Verzichte auf: "+neg+".":"Do not include: "+neg+"."):"";
+  var serieSatz=$("serie").checked
+    ?(de?"Das Bild ist Teil einer Serie: Verwende exakt denselben Stil, dieselbe Farbpalette und dasselbe Kompositionsschema wie bei den übrigen Bildern der Serie."
+        :"This image is part of a series: use exactly the same style, colour palette and compositional scheme as the other images in the series.")
+    :"";
+
+  var parts=[
+    '<span class="ph">'+PH[de?"de":"en"]+"</span>",
+    s1,colorSentence(),d.o[de?"de":"en"],g.o[de?"de":"en"],st.o[de?"de":"en"],biasSatz
+  ].concat(expertParts()).concat([
+    zweckSatz,negSatz,serieSatz,altSatz,
+    '<span class="fix">'+FIX[de?"de":"en"]+"</span>"
+  ]);
+  $("prompt").innerHTML=parts.filter(Boolean).join(" ");
+}
+
+function copyPrompt(){
+  var text=$("prompt").innerText;
+  function done(){var ok=$("ok");ok.classList.add("show");setTimeout(function(){ok.classList.remove("show");},2200);}
+  function fallback(){
+    var ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();
+    try{document.execCommand("copy");}catch(e){}
+    document.body.removeChild(ta);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done,function(){fallback();done();});
+  }else{fallback();done();}
+}
+
+/* ---------- Events ---------- */
+document.querySelectorAll("#form select").forEach(function(sel){
+  sel.addEventListener("change",function(){
+    var c=$(sel.id+"_c");
+    if(c){c.classList.toggle("show",sel.value.indexOf("custom:")===0);}
+    if(sel.id==="farbe"){$("palette").classList.toggle("show",sel.value.indexOf("palette:")===0);}
+    if(sel.id==="typ"){buildExpert(false);}
+    build();
+  });
+});
+document.querySelectorAll("#form input, #palette input").forEach(function(inp){
+  inp.addEventListener("input",build);
+  inp.addEventListener("change",build);
+});
+$("expfree").addEventListener("input",build);
+$("exphead").addEventListener("click",function(){
+  expOpen=!expOpen;
+  $("exphead").classList.toggle("open",expOpen);
+  $("expbody").classList.toggle("show",expOpen);
+  build();
+});
+function setLang(l){
+  lang=l;
+  $("de").classList.toggle("on",l==="de");
+  $("en").classList.toggle("on",l==="en");
+  fillAll();
+  applyUI();
+  buildExpert(true);
+  buildBias(true);
+  build();
+}
+$("de").addEventListener("click",function(){setLang("de");});
+$("en").addEventListener("click",function(){setLang("en");});
+$("copy").addEventListener("click",copyPrompt);
+
+/* ---------- Start ---------- */
+fillAll();
+applyUI();
+buildExpert(false);
+buildBias(false);
+build();
+})();
+</script>
+</body>
+</html>

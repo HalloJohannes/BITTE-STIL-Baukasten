@@ -1,0 +1,27 @@
+# macOS / editor noise
+.DS_Store
+*.swp
+*.swo
+
+# Dependencies and package-manager output
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# Local environment and temporary work
+.env
+.env.*
+!.env.example
+.quality-runtime/
+work/
+tmp/
+
+# Generated release bundles; the source, current root HTML and current mirror stay versioned
+outputs/
+
+# Test output
+coverage/
+test-results/
+
+# Local supplementary material is reviewed separately before publication
+zusatzmaterial/

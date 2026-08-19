@@ -1,0 +1,19 @@
+{
+  "name": "bitte-stil-baukasten",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Kontrollierte Quelle und Single-HTML-Auslieferung für den BITTE STIL Baukasten.",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build-release.mjs",
+    "pages:build": "node scripts/build-pages.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check:plugin": "node scripts/check-plugin.mjs",
+    "check:pages": "node scripts/check-pages.mjs",
+    "check:structure": "node scripts/check-structure.mjs",
+    "check:product": "node scripts/check-product.mjs",
+    "check:release": "node scripts/check-release.mjs",
+    "check": "node scripts/run-release-check.mjs"
+  }
+}
