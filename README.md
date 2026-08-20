@@ -1,6 +1,6 @@
 # BITTE STIL Baukasten
 
-Stand: 19. August 2026 · Version 1.0.0
+Stand: 19. August 2026 · Version 1.1.0
 
 Der BITTE STIL Baukasten hilft dabei, aus einer Bildidee einen klaren Prompt für Bild-KI zu machen. Er fragt nicht danach, *was* du darstellen möchtest, sondern unterstützt dich dabei, *wie* das Bild gestaltet werden soll.
 
